@@ -2540,3 +2540,57 @@ gamesArr.forEach(game => {
 // console.log(("Z".charCodeAt(0) - "C".charCodeAt(0) - 23)*(-1)) //  0 => Scissor v Scissor => Draw
 // console.log(("Z".charCodeAt(0) - "A".charCodeAt(0) - 23)*(-1)) // -2 => Scissor v Rock => Lose
 // console.log(("Z".charCodeAt(0) - "B".charCodeAt(0) - 23)*(-1)) // -1 => Scissor v Paper => Win
+
+// --- PART 2 ---
+
+const ENDINGS = CHOICES // ["X", "Y", "Z"] lose, draw, win
+const CHOICES2 = ["A", "B", "C", "A", "B", "C"]
+
+const outcomeValue2 = (ending) => ENDINGS.indexOf(ending) * 3 // 0, 3, 6 for X, Y, Z / lose, draw, win
+
+const choiceValue2 = (choice) => CHOICES2.indexOf(choice) + 1
+
+
+const calcPoints = (games) => {
+  let points2 = 0
+  games.forEach(game => {
+    // per lose, draw, win -> opponent choice (A,B,C) + 1, 0, 2
+  let opponentsChoice = game[0] // A, B or C
+  let indexOfOpponentsChoice = CHOICES2.indexOf(opponentsChoice) // 0, 1, 2
+  let ending = game[1] // X, Y, Z
+  let indexOfEnding = ENDINGS.indexOf(ending) // 0, 1, 2
+  let choice;
+  // lose: X -> index 0, get
+  switch (ending) {
+    case "X":
+      choice = CHOICES2[indexOfOpponentsChoice + 2];// lose -> +2
+      break;
+    case "Y":
+      choice = opponentsChoice; // draw -> +0
+      break;
+    case "Z":
+      choice = CHOICES2[indexOfOpponentsChoice + 1]; // win -> +1
+      break;
+  }
+  points2 += outcomeValue2(ending) + choiceValue2(choice)
+  });
+  return points2
+}
+
+console.log(calcPoints(gamesArr))
+
+// --- TESTING ---
+// In the first round, your opponent will choose Rock (A), and you need the round to end in a draw (Y), so you also choose Rock. This gives you a score of 1 + 3 = 4.
+// In the second round, your opponent will choose Paper (B), and you choose Rock so you lose (X) with a score of 1 + 0 = 1.
+// In the third round, you will defeat your opponent's Scissors with Rock for a score of 1 + 6 = 7.
+console.log(calcPoints([["A","Y"]]) == 4)
+console.log(calcPoints([["B","X"]]) == 1)
+console.log(calcPoints([["C","Z"]]) == 7)
+
+
+// console.log(CHOICES2.indexOf("C"))
+// console.log(gamesArr)
+
+
+// [ 'B', 'X' ], [ 'C', 'Y' ], [ 'A', 'X' ], [ 'B', 'X' ], [ 'B', 'Y' ]
+// lose, draw, lose, lose, win
